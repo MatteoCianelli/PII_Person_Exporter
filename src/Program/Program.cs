@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Ucu.Poo.PersonExporter
 {
@@ -32,21 +33,34 @@ namespace Ucu.Poo.PersonExporter
             Console.WriteLine("Seleccione el formato de reporte:");
             Console.WriteLine("1 - HTML");
             Console.WriteLine("2 - PDF");
+            Console.WriteLine("3 - MD");
+            Console.WriteLine("4 - CSV");
             Console.Write("Opción: ");
 
             string option = Console.ReadLine();
-            string format;
             string outputPath;
+            IFileGenerator fileGenerator;
+
 
             if (option == "1")
             {
-                format = "HTML";
+                fileGenerator = new HtmlGenerator();
                 outputPath = "persons-report.html";
             }
             else if (option == "2")
             {
-                format = "PDF";
+                fileGenerator = new PdfGenerator();
                 outputPath = "persons-report.pdf";
+            }
+            else if (option == "3")
+            {
+                fileGenerator = new MarkdownGenerator();
+                outputPath = "persons-report.md";
+            }
+            else if (option == "4")
+            {
+                fileGenerator = new CsvGenerator();
+                outputPath = "persons-report.csv";
             }
             else
             {
@@ -54,7 +68,7 @@ namespace Ucu.Poo.PersonExporter
                 return;
             }
 
-            bool result = generator.GenerateReport(people, format, outputPath);
+            bool result = generator.GenerateReport(people, outputPath, fileGenerator);
 
             if (result)
             {
